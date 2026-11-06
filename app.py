@@ -1,20 +1,16 @@
 
-from flask import Flask
+from flask import Flask, render_template
 
-# Create the Flask application
+# Create Flask application
 app = Flask(__name__)
 
 
-# Home page route
+# Home page
 @app.route("/")
 def home():
-    return """
-    <h1>Daily Events & Indian Calendar</h1>
-    <p>Welcome to our application!</p>
-    <p>Discover Indian festivals, holidays, and daily events.</p>
-    """
+    return render_template("index.html")
 
 
-# Run the application
+# Run application
 if __name__ == "__main__":
     app.run(debug=True)
