@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}My events — Daymark{% endblock %}
+
+{% block content %}
+<section class="page-heading-row">
+    <div>
+        <p class="eyebrow">YOUR COLLECTION</p>
+        <h1>My events<span class="brand-period">.</span></h1>
+        <p class="page-description">All your meaningful dates, gathered in one simple view.</p>
+    </div>
+    <a class="button button-primary" href="{{ url_for('events.add_event') }}">＋ Add an event</a>
+</section>
+
+{% if events %}
+    <div class="events-toolbar">
+        <span class="result-count">{{ events|length }} saved event{% if events|length != 1 %}s{% endif %}</span>
+        <span class="toolbar-hint">Sorted by event date</span>
+    </div>
+
+    <section class="events-grid">
+        {% for event in events %}
+        <article class="event-card">
+            <div class="event-card-top">
+                <span class="category-pill">{{ event.event_type }}</span>
+                <span class="event-date">{{ event.event_date.strftime('%d %b %Y') }}</span>
+            </div>
+            <h2>{{ event.title }}</h2>
+            <p class="event-description">{{ event.description or "No description added yet." }}</p>
+            <div class="event-card-footer">
+                <a class="small-link" href="{{ url_for('events.edit_event', event_id=event.id) }}">Edit details <span aria-hidden="true">↗</span></a>
+                <form method="POST" action="{{ url_for('events.delete_event', event_id=event.id) }}" onsubmit="return confirm('Move this event to deleted history?');">
+                    <button class="button-link button-delete" type="submit">Delete</button>
+                </form>
+            </div>
+        </article>
+        {% endfor %}
+    </section>
+{% else %}
+    <section class="empty-panel">
+        <div class="empty-illustration">▦</div>
+        <p class="eyebrow">A FRESH START</p>
+        <h2>Your event list is empty.</h2>
+        <p>When you add birthdays, festivals and other special dates, they will appear here.</p>
+        <a class="button button-primary" href="{{ url_for('events.add_event') }}">＋ Add your first event</a>
+    </section>
+{% endif %}
+{% endblock %}

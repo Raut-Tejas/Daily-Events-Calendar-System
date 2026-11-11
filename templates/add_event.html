@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Add an event — Daymark{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <a class="back-link" href="{{ url_for('events.view_events') }}">← Back to my events</a>
+    <div class="form-intro">
+        <p class="eyebrow">SAVE A DATE</p>
+        <h1>Make it <span>memorable.</span></h1>
+        <p>Add the details below. You can edit them whenever plans change.</p>
+    </div>
+
+    <form class="event-form" method="POST">
+        <div class="form-field">
+            <label for="title">Event name <span class="required">*</span></label>
+            <input id="title" type="text" name="title" maxlength="150" placeholder="e.g. Diwali celebration" required>
+            <small>Give your event a short, recognisable name.</small>
+        </div>
+
+        <div class="form-field">
+            <label for="event_type">Category <span class="required">*</span></label>
+            <select id="event_type" name="event_type" required>
+                <option value="" disabled selected>Choose a category</option>
+                <option value="Festival">Festival</option>
+                <option value="National Holiday">National holiday</option>
+                <option value="Birthday">Birthday</option>
+                <option value="Anniversary">Anniversary</option>
+                <option value="Personal">Personal</option>
+                <option value="College">College</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-field">
+            <label for="event_date">Event date <span class="required">*</span></label>
+            <input id="event_date" type="date" name="event_date" required>
+        </div>
+
+        <div class="form-field">
+            <label for="description">A few details <span class="optional">(optional)</span></label>
+            <textarea id="description" name="description" rows="4" placeholder="Add a note, location or anything you would like to remember..."></textarea>
+        </div>
+
+        <div class="form-actions">
+            <a class="button button-quiet" href="{{ url_for('events.view_events') }}">Cancel</a>
+            <button class="button button-primary" type="submit">Save event <span aria-hidden="true">→</span></button>
+        </div>
+    </form>
+</section>
+{% endblock %}

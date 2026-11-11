@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Deleted history — Daymark{% endblock %}
+
+{% block content %}
+<section class="page-heading-row">
+    <div>
+        <p class="eyebrow">YOUR ARCHIVE</p>
+        <h1>Deleted history<span class="brand-period">.</span></h1>
+        <p class="page-description">A record of events you have removed from your active list.</p>
+    </div>
+    <a class="button button-quiet" href="{{ url_for('events.view_events') }}">← Back to events</a>
+</section>
+
+{% if deleted_events %}
+    <div class="events-toolbar">
+        <span class="result-count">{{ deleted_events|length }} archived record{% if deleted_events|length != 1 %}s{% endif %}</span>
+        <span class="toolbar-hint">Newest deletions first</span>
+    </div>
+
+    <section class="events-grid">
+        {% for event in deleted_events %}
+        <article class="event-card archived-card">
+            <div class="event-card-top">
+                <span class="category-pill category-muted">{{ event.event_type }}</span>
+                <span class="event-date">{{ event.event_date.strftime('%d %b %Y') }}</span>
+            </div>
+            <h2>{{ event.title }}</h2>
+            <p class="event-description">{{ event.description or "No description added." }}</p>
+            <p class="deleted-at">Removed {{ event.deleted_at.strftime('%d %b %Y, %I:%M %p') }}</p>
+            <form method="POST" action="{{ url_for('events.permanently_delete_history', history_id=event.id) }}" onsubmit="return confirm('Permanently delete this history record? This cannot be undone.');">
+                <button class="button-link button-delete" type="submit">Permanently delete</button>
+            </form>
+        </article>
+        {% endfor %}
+    </section>
+{% else %}
+    <section class="empty-panel">
+        <div class="empty-illustration">↶</div>
+        <p class="eyebrow">NOTHING HERE</p>
+        <h2>Your history is clear.</h2>
+        <p>Events you delete will be listed here so you can review what was removed.</p>
+        <a class="button button-primary" href="{{ url_for('events.view_events') }}">Go to my events</a>
+    </section>
+{% endif %}
+{% endblock %}

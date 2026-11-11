@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f7f3">
+    <meta name="description" content="Daymark helps you organise festivals, holidays and personal events in one thoughtful calendar.">
+    <title>{% block title %}Daymark — Your days, thoughtfully organised{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <header class="site-header">
+        <nav class="nav-shell" aria-label="Main navigation">
+            <a class="brand" href="{{ url_for('home') }}" aria-label="Daymark home">
+                <span class="brand-mark">d</span>
+                <span class="brand-name">daymark<span class="brand-period">.</span></span>
+            </a>
+
+            <button class="nav-toggle" type="button" aria-label="Open navigation"
+                    aria-expanded="false" aria-controls="primary-navigation">
+                <span></span><span></span><span></span>
+            </button>
+
+            <div class="nav-links" id="primary-navigation">
+                <a class="nav-link {% if request.endpoint == 'home' %}is-active{% endif %}"
+                   href="{{ url_for('home') }}">Overview</a>
+                <a class="nav-link {% if request.endpoint == 'events.view_events' %}is-active{% endif %}"
+                   href="{{ url_for('events.view_events') }}">My events</a>
+                <a class="nav-link {% if request.endpoint in ['events.add_event', 'events.edit_event'] %}is-active{% endif %}"
+                   href="{{ url_for('events.add_event') }}">Add event</a>
+                <a class="nav-link {% if request.endpoint == 'events.deleted_history' %}is-active{% endif %}"
+                   href="{{ url_for('events.deleted_history') }}">History</a>
+            </div>
+
+            <a class="nav-cta" href="{{ url_for('events.add_event') }}">
+                <span aria-hidden="true">＋</span> New event
+            </a>
+        </nav>
+    </header>
+
+    <main class="page-shell" id="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-stack" aria-live="polite">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            <span>{{ message }}</span>
+                            <button class="flash-dismiss" type="button" aria-label="Dismiss message">&times;</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-main">
+            <div class="footer-about">
+                <a class="brand footer-brand" href="{{ url_for('home') }}" aria-label="Daymark home">
+                    <span class="brand-mark">d</span>
+                    <span class="brand-name">daymark<span class="brand-period">.</span></span>
+                </a>
+                <p class="footer-tagline">Make room for the days that matter.</p>
+                <p class="footer-description">
+                    A simple space for the celebrations, milestones and everyday moments
+                    you want to keep close.
+                </p>
+            </div>
+
+            <div class="footer-column">
+                <h2>Explore</h2>
+                <a href="{{ url_for('home') }}">Overview</a>
+                <a href="{{ url_for('events.view_events') }}">My events</a>
+                <a href="{{ url_for('events.add_event') }}">Add an event</a>
+            </div>
+
+            <div class="footer-column">
+                <h2>Your dates</h2>
+                <a href="{{ url_for('events.deleted_history') }}">Deleted history</a>
+                <span>Festivals &amp; holidays</span>
+                <span>Birthdays &amp; anniversaries</span>
+            </div>
+
+            <div class="footer-note">
+                <span class="footer-note-mark" aria-hidden="true">✳</span>
+                <p><strong>One date at a time.</strong><br>Keep your calendar personal, useful and easy to manage.</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>&copy; 2026 Daymark. Made for meaningful moments.</span>
+            <a href="{{ url_for('home') }}">Back to top ↑</a>
+        </div>
+    </footer>
+
+    <script>
+        const navToggle = document.querySelector(".nav-toggle");
+        const navLinks = document.querySelector(".nav-links");
+
+        if (navToggle && navLinks) {
+            navToggle.addEventListener("click", () => {
+                const expanded = navToggle.getAttribute("aria-expanded") === "true";
+                navToggle.setAttribute("aria-expanded", String(!expanded));
+                navToggle.setAttribute("aria-label", expanded ? "Open navigation" : "Close navigation");
+                navLinks.classList.toggle("nav-open", !expanded);
+            });
+        }
+
+        document.querySelectorAll(".flash-dismiss").forEach((button) => {
+            button.addEventListener("click", () => {
+                button.closest(".flash-message").remove();
+            });
+        });
+    </script>
+</body>
+</html>
