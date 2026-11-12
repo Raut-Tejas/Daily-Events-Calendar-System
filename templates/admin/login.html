@@ -1,0 +1,569 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#f7f7f3">
+
+    <title>Admin Login | Daymark</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --paper: #f7f7f3;
+            --white: #ffffff;
+            --green: #315c48;
+            --green-dark: #234735;
+            --green-pale: #e9eee5;
+            --ink: #263128;
+            --muted: #818b80;
+            --line: #e7e9e2;
+            --red: #b54747;
+        }
+
+        body {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 30px;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 1080px;
+            min-height: 650px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 17px;
+            overflow: hidden;
+            box-shadow: 0 24px 70px rgba(38, 49, 40, 0.10);
+        }
+
+        /* Left panel */
+
+        .brand-panel {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            padding: 42px;
+            background: var(--green-pale);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--ink);
+            text-decoration: none;
+            font-family: 'Playfair Display', serif;
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .brand-mark {
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 9px;
+            background: var(--green);
+            color: white;
+            font-size: 22px;
+        }
+
+        .brand-period {
+            color: var(--green);
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 2;
+            max-width: 430px;
+        }
+
+        .eyebrow {
+            margin-bottom: 18px;
+            color: var(--green);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+        }
+
+        .brand-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(38px, 4.5vw, 54px);
+            line-height: 1.12;
+            font-weight: 600;
+        }
+
+        .brand-content h1 span {
+            color: var(--green);
+        }
+
+        .brand-description {
+            max-width: 390px;
+            margin-top: 20px;
+            color: #657166;
+            font-size: 14px;
+            line-height: 1.85;
+        }
+
+        .features {
+            display: grid;
+            gap: 13px;
+            margin-top: 30px;
+            list-style: none;
+        }
+
+        .features li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #445b49;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .check {
+            width: 21px;
+            height: 21px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #d5e2d1;
+            color: var(--green);
+        }
+
+        .brand-footer {
+            position: relative;
+            z-index: 2;
+            color: #778477;
+            font-size: 10px;
+            letter-spacing: 0.4px;
+        }
+
+        .circle {
+            position: absolute;
+            border: 1px solid rgba(49, 92, 72, 0.10);
+            border-radius: 50%;
+        }
+
+        .circle-one {
+            width: 390px;
+            height: 390px;
+            right: -180px;
+            top: 70px;
+        }
+
+        .circle-two {
+            width: 290px;
+            height: 290px;
+            right: -130px;
+            top: 120px;
+        }
+
+        /* Right panel */
+
+        .login-panel {
+            display: grid;
+            place-items: center;
+            padding: 55px 48px;
+        }
+
+        .login-content {
+            width: 100%;
+            max-width: 370px;
+        }
+
+        .admin-label {
+            display: inline-block;
+            margin-bottom: 28px;
+            padding: 8px 11px;
+            border-radius: 5px;
+            background: var(--green-pale);
+            color: var(--green);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+        }
+
+        .login-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 34px;
+            font-weight: 600;
+            letter-spacing: -0.6px;
+        }
+
+        .subtitle {
+            margin: 11px 0 30px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .flash-stack {
+            display: grid;
+            gap: 9px;
+            margin-bottom: 20px;
+        }
+
+        .flash-message {
+            padding: 12px;
+            border-radius: 7px;
+            font-size: 12px;
+        }
+
+        .flash-error,
+        .flash-warning {
+            background: #fff0f0;
+            color: var(--red);
+        }
+
+        .flash-success {
+            background: #eaf3e9;
+            color: var(--green);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 9px;
+            color: #465147;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 49px;
+            padding: 0 14px;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            outline: none;
+            background: white;
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 12px;
+            transition: 0.2s ease;
+        }
+
+        .form-group input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(49, 92, 72, 0.09);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 65px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 13px;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: var(--green);
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .login-button {
+            width: 100%;
+            min-height: 49px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 7px;
+            border: none;
+            border-radius: 7px;
+            background: var(--green);
+            color: white;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .login-button:hover {
+            background: var(--green-dark);
+            transform: translateY(-2px);
+        }
+
+        .security-note {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            background: #fbfcf9;
+        }
+
+        .security-icon {
+            color: var(--green);
+            font-size: 17px;
+        }
+
+        .security-note p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        .back-home {
+            display: inline-block;
+            margin-top: 24px;
+            color: var(--green);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .back-home:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive design */
+
+        @media (max-width: 760px) {
+            body {
+                padding: 15px;
+            }
+
+            .login-container {
+                max-width: 480px;
+                grid-template-columns: 1fr;
+            }
+
+            .brand-panel {
+                min-height: 330px;
+                padding: 28px;
+            }
+
+            .brand-content {
+                margin-top: 45px;
+            }
+
+            .brand-content h1 {
+                font-size: 37px;
+            }
+
+            .brand-footer {
+                margin-top: 30px;
+            }
+
+            .login-panel {
+                padding: 40px 25px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .brand-content h1 {
+                font-size: 31px;
+            }
+
+            .login-content h2 {
+                font-size: 29px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="login-container">
+
+        <section class="brand-panel">
+
+            <a href="{{ url_for('home') }}" class="brand">
+                <span class="brand-mark">d</span>
+                <span>daymark<span class="brand-period">.</span></span>
+            </a>
+
+            <div class="brand-content">
+
+                <p class="eyebrow">CAMPUS EVENT MANAGEMENT</p>
+
+                <h1>
+                    Thoughtful planning.
+                    <span>Meaningful moments.</span>
+                </h1>
+
+                <p class="brand-description">
+                    Review imported dates, manage campus events
+                    and keep your community informed from one
+                    organised workspace.
+                </p>
+
+                <ul class="features">
+                    <li><span class="check">✓</span> Review event submissions</li>
+                    <li><span class="check">✓</span> Manage campus dates</li>
+                    <li><span class="check">✓</span> Keep information organised</li>
+                </ul>
+
+            </div>
+
+            <p class="brand-footer">
+                Cloud-Based Campus Event Notification System
+            </p>
+
+            <span class="circle circle-one"></span>
+            <span class="circle circle-two"></span>
+
+        </section>
+
+        <section class="login-panel">
+
+            <div class="login-content">
+
+                <span class="admin-label">
+                    ADMINISTRATOR ACCESS
+                </span>
+
+                <p class="eyebrow">WELCOME BACK</p>
+
+                <h2>
+                    Sign in to Daymark<span class="brand-period">.</span>
+                </h2>
+
+                <p class="subtitle">
+                    Enter your administrator credentials to continue.
+                </p>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-stack" aria-live="polite">
+                            {% for category, message in messages %}
+                                <div class="flash-message flash-{{ category }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST"
+                      action="{{ url_for('admin_auth.admin_login') }}">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <div class="form-group">
+
+                        <label for="username">Username</label>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter your admin username"
+                            autocomplete="username"
+                            required
+                            autofocus
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="password">Password</label>
+
+                        <div class="password-wrapper">
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                id="togglePassword"
+                                aria-controls="password"
+                                aria-pressed="false"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="login-button">
+                        Sign in securely <span>→</span>
+                    </button>
+
+                </form>
+
+                <div class="security-note">
+                    <span class="security-icon">◇</span>
+                    <p>
+                        Restricted area. Access is intended
+                        for authorised administrators only.
+                    </p>
+                </div>
+
+                <a href="{{ url_for('home') }}" class="back-home">
+                    ← Return to the event homepage
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        const passwordInput = document.getElementById("password");
+        const toggleButton = document.getElementById("togglePassword");
+
+        toggleButton.addEventListener("click", function () {
+
+            const isHidden = passwordInput.type === "password";
+
+            passwordInput.type = isHidden ? "text" : "password";
+
+            toggleButton.textContent = isHidden ? "Hide" : "Show";
+
+            toggleButton.setAttribute(
+                "aria-pressed",
+                String(isHidden)
+            );
+
+        });
+    </script>
+
+</body>
+</html>

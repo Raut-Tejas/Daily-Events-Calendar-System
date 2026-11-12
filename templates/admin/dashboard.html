@@ -1,0 +1,767 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard | Daymark{% endblock %}
+
+{% block content %}
+
+<style>
+    .admin-dashboard {
+        display: flex;
+        min-height: 80vh;
+        background: #f8f9f6;
+        color: #293b30;
+    }
+
+    .admin-sidebar {
+        width: 255px;
+        flex-shrink: 0;
+        background: #ffffff;
+        border-right: 1px solid #e7ebe5;
+        padding: 28px 18px;
+    }
+
+    .admin-brand {
+        padding: 0 12px 30px;
+        border-bottom: 1px solid #edf0eb;
+    }
+
+    .admin-brand h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 27px;
+        margin: 0;
+        color: #36563f;
+    }
+
+    .admin-brand p {
+        color: #8a968d;
+        font-size: 12px;
+        margin-top: 6px;
+    }
+
+    .admin-nav-label {
+        color: #9aa49b;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        margin: 28px 12px 12px;
+    }
+
+    .admin-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .admin-nav a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        border-radius: 9px;
+        text-decoration: none;
+        color: #69766d;
+        font-size: 14px;
+        font-weight: 500;
+        transition: 0.2s ease;
+    }
+
+    .admin-nav a:hover,
+    .admin-nav a.active {
+        background: #edf3ed;
+        color: #416449;
+    }
+
+    .admin-nav-icon {
+        width: 22px;
+        text-align: center;
+        font-size: 17px;
+    }
+
+    .admin-sidebar-footer {
+        margin-top: 40px;
+        border-top: 1px solid #edf0eb;
+        padding-top: 20px;
+    }
+
+    .admin-main {
+        flex: 1;
+        min-width: 0;
+        padding: 30px 38px;
+    }
+
+    .admin-topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 35px;
+    }
+
+    .admin-page-title h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 31px;
+        margin: 0 0 7px;
+    }
+
+    .admin-page-title p {
+        color: #849087;
+        font-size: 13px;
+        margin: 0;
+    }
+
+    .admin-user-area {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .admin-avatar {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        background: #e8f0e8;
+        color: #416449;
+        border-radius: 50%;
+        font-weight: 700;
+    }
+
+    .admin-user-info strong {
+        display: block;
+        font-size: 13px;
+    }
+
+    .admin-user-info span {
+        color: #89948c;
+        font-size: 11px;
+    }
+
+    .admin-welcome {
+        background: #eaf1e9;
+        border-radius: 18px;
+        padding: 32px;
+        margin-bottom: 30px;
+    }
+
+    .admin-welcome span {
+        color: #66816a;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+    }
+
+    .admin-welcome h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 29px;
+        margin: 12px 0;
+    }
+
+    .admin-welcome p {
+        color: #718078;
+        font-size: 14px;
+        line-height: 1.7;
+        max-width: 650px;
+        margin-bottom: 0;
+    }
+
+    .admin-section-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 32px 0 18px;
+    }
+
+    .admin-section-heading h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        margin: 0;
+    }
+
+    .admin-section-heading p {
+        color: #929c94;
+        font-size: 12px;
+        margin: 5px 0 0;
+    }
+
+    .admin-card-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .admin-card {
+        background: #ffffff;
+        border: 1px solid #e9ede7;
+        border-radius: 15px;
+        padding: 23px;
+        transition: 0.2s ease;
+    }
+
+    .admin-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 9px 25px rgba(36, 57, 40, 0.06);
+    }
+
+    .admin-card-icon {
+        width: 43px;
+        height: 43px;
+        display: grid;
+        place-items: center;
+        background: #edf3ed;
+        color: #496e53;
+        border-radius: 11px;
+        font-size: 21px;
+        margin-bottom: 17px;
+    }
+
+    .admin-card h3 {
+        font-size: 17px;
+        margin: 0 0 9px;
+    }
+
+    .admin-card p {
+        color: #849087;
+        font-size: 13px;
+        line-height: 1.7;
+        min-height: 43px;
+        margin-bottom: 18px;
+    }
+
+    .admin-card-link {
+        color: #496e53;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .admin-card-link:hover {
+        color: #263f2d;
+    }
+
+    .admin-quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 18px;
+    }
+
+    .admin-action-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 18px;
+        background: #496e53;
+        color: white;
+        text-decoration: none;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: 0.2s ease;
+    }
+
+    .admin-action-button:hover {
+        background: #36563f;
+        color: white;
+    }
+
+    .admin-action-secondary {
+        background: #ffffff;
+        color: #496e53;
+        border: 1px solid #dce6db;
+    }
+
+    .admin-action-secondary:hover {
+        background: #edf3ed;
+        color: #36563f;
+    }
+
+    .admin-logout-form {
+        margin: 0;
+    }
+
+    .admin-logout-button {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        width: 100%;
+        padding: 12px;
+        background: transparent;
+        border: none;
+        border-radius: 9px;
+        color: #a34437;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: left;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .admin-logout-button:hover {
+        background: #f9eeeb;
+    }
+
+    .admin-dashboard-footer {
+        border-top: 1px solid #e8ece6;
+        margin-top: 45px;
+        padding-top: 20px;
+        color: #929c94;
+        font-size: 12px;
+    }
+
+    @media (max-width: 850px) {
+        .admin-dashboard {
+            flex-direction: column;
+        }
+
+        .admin-sidebar {
+            width: 100%;
+            border-right: none;
+            border-bottom: 1px solid #e7ebe5;
+            padding: 18px;
+        }
+
+        .admin-brand {
+            padding-bottom: 15px;
+        }
+
+        .admin-nav {
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .admin-nav-label {
+            margin-top: 18px;
+        }
+
+        .admin-sidebar-footer {
+            margin-top: 15px;
+            padding-top: 10px;
+        }
+
+        .admin-logout-button {
+            width: auto;
+        }
+
+        .admin-main {
+            padding: 25px 20px;
+        }
+    }
+
+    @media (max-width: 550px) {
+        .admin-card-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .admin-topbar {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .admin-page-title h1 {
+            font-size: 26px;
+        }
+
+        .admin-welcome {
+            padding: 24px;
+        }
+
+        .admin-welcome h2 {
+            font-size: 24px;
+        }
+
+        .admin-user-area {
+            margin-top: 10px;
+        }
+    }
+
+    .admin-stats-section {
+        margin-bottom: 35px;
+    }
+
+    .admin-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .admin-stat-card {
+        background: #ffffff;
+        border: 1px solid #e8ece6;
+        border-radius: 14px;
+        padding: 21px;
+        transition: 0.2s ease;
+    }
+
+    .admin-stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 22px rgba(36, 57, 40, 0.06);
+    }
+
+    .admin-stat-icon {
+        display: inline-grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: #edf3ed;
+        color: #496e53;
+        font-size: 19px;
+    }
+
+    .admin-stat-card p {
+        color: #849087;
+        font-size: 12px;
+        margin: 15px 0 7px;
+    }
+
+    .admin-stat-card h3 {
+        color: #293b30;
+        font-size: 27px;
+        margin: 0;
+        font-weight: 700;
+    }
+
+    @media (max-width: 850px) {
+        .admin-stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 450px) {
+        .admin-stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+
+.admin-notification-overview {
+    margin: 32px 0;
+}
+
+.admin-notification-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.admin-notification-summary div {
+    background: #ffffff;
+    border: 1px solid #e8ece6;
+    border-radius: 13px;
+    padding: 22px;
+}
+
+.admin-notification-summary span {
+    display: block;
+    color: #849087;
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.admin-notification-summary strong {
+    font-size: 27px;
+    color: #36563f;
+}
+
+@media (max-width: 600px) {
+    .admin-notification-summary {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+</style>
+
+<div class="admin-dashboard">
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-brand">
+            <h2>Daymark.</h2>
+            <p>Campus Event Management</p>
+        </div>
+
+        <p class="admin-nav-label">MAIN MENU</p>
+
+        <nav class="admin-nav">
+
+            <a href="{{ url_for('admin_auth.admin_dashboard') }}" class="active">
+                <span class="admin-nav-icon">⌂</span>
+                Dashboard
+            </a>
+
+            <a href="/events">
+                <span class="admin-nav-icon">▦</span>
+                All Events
+            </a>
+
+            <a href="/events/add">
+                <span class="admin-nav-icon">＋</span>
+                Add New Event
+            </a>
+
+            <a href="{{ url_for('admin_approval.imported_events') }}">
+                <span class="admin-nav-icon">⇩</span>
+                Imported Events
+            </a>
+            <a href="{{ url_for('admin_notification.notification_dashboard') }}">
+                <span class="admin-nav-icon">♧</span>
+                Notifications
+            </a>
+
+            <a href="/events/history">
+                <span class="admin-nav-icon">◷</span>
+                Deleted History
+            </a>
+
+        </nav>
+
+        <p class="admin-nav-label">GENERAL</p>
+
+        <nav class="admin-nav">
+            <a href="{{ url_for('home') }}" target="_blank">
+                <span class="admin-nav-icon">↗</span>
+                Public Website
+            </a>
+        </nav>
+
+        <div class="admin-sidebar-footer">
+
+            <form method="POST" action="{{ url_for('admin_auth.admin_logout') }}" class="admin-logout-form">
+
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <button type="submit" class="admin-logout-button">
+                    <span>↪</span>
+                    Logout
+                </button>
+
+            </form>
+
+        </div>
+
+    </aside>
+
+    <main class="admin-main">
+
+        <header class="admin-topbar">
+
+            <div class="admin-page-title">
+                <h1>Admin Dashboard</h1>
+                <p>Manage your campus events and notifications.</p>
+            </div>
+
+            <div class="admin-user-area">
+                <div class="admin-avatar">
+                    {{ current_user.username[0]|upper }}
+                </div>
+
+                <div class="admin-user-info">
+                    <strong>{{ current_user.username }}</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+
+        </header>
+
+        <section class="admin-stats-section">
+
+            <div class="admin-section-heading">
+                <div>
+                    <h2>System Overview</h2>
+                    <p>Live statistics from your database.</p>
+                </div>
+            </div>
+
+            <div class="admin-stats-grid">
+
+                <div class="admin-stat-card">
+                    <span class="admin-stat-icon">▦</span>
+                    <p>Total Campus Events</p>
+                    <h3>{{ stats.total_events }}</h3>
+                </div>
+
+                <div class="admin-stat-card">
+                    <span class="admin-stat-icon">◷</span>
+                    <p>Pending Approvals</p>
+                    <h3>{{ stats.pending_events }}</h3>
+                </div>
+
+                <div class="admin-stat-card">
+                    <span class="admin-stat-icon">✓</span>
+                    <p>Approved Events</p>
+                    <h3>{{ stats.approved_events }}</h3>
+                </div>
+
+                <div class="admin-stat-card">
+                    <span class="admin-stat-icon">×</span>
+                    <p>Rejected Events</p>
+                    <h3>{{ stats.rejected_events }}</h3>
+                </div>
+
+                <div class="admin-stat-card">
+                    <span class="admin-stat-icon">↶</span>
+                    <p>Deleted Events</p>
+                    <h3>{{ stats.deleted_events }}</h3>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="admin-welcome">
+
+            <span>ADMINISTRATION PANEL</span>
+
+            <h2>Welcome back, {{ current_user.username }}.</h2>
+
+            <p>
+                Manage campus events, review imported Indian calendar
+                events, maintain event records, and keep your campus
+                community informed through Daymark.
+            </p>
+
+            <div class="admin-quick-actions">
+
+                <a href="/events/add" class="admin-action-button">
+                    + Create Event
+                </a>
+
+                <a href="{{ url_for('admin_approval.imported_events') }}"
+                    class="admin-action-button admin-action-secondary">
+                    Review Imported Events
+                </a>
+
+            </div>
+
+        </section>
+
+<section class="admin-notification-overview">
+
+    <div class="admin-section-heading">
+        <div>
+            <h2>Notification Overview</h2>
+            <p>Summary of notification activity.</p>
+        </div>
+
+        <a href="{{ url_for('admin_notification.notification_dashboard') }}"
+           class="admin-card-link">
+            View All →
+        </a>
+    </div>
+
+    <div class="admin-notification-summary">
+
+        <div>
+            <span>Total Records</span>
+            <strong>{{ notification_stats.total_notifications }}</strong>
+        </div>
+
+        <div>
+            <span>Unique Users</span>
+            <strong>{{ notification_stats.total_users }}</strong>
+        </div>
+
+        <div>
+            <span>Event Occurrences</span>
+            <strong>{{ notification_stats.notified_occurrences }}</strong>
+        </div>
+
+    </div>
+
+</section>
+
+
+        <section>
+
+            <div class="admin-section-heading">
+                <div>
+                    <h2>Management Center</h2>
+                    <p>Access your administrative tasks.</p>
+                </div>
+            </div>
+
+            <div class="admin-card-grid">
+
+                <article class="admin-card">
+                    <div class="admin-card-icon">▦</div>
+                    <h3>All Campus Events</h3>
+                    <p>
+                        View and manage events already available
+                        in your campus calendar.
+                    </p>
+                    <a href="/events" class="admin-card-link">
+                        View Events →
+                    </a>
+                </article>
+
+                <article class="admin-card">
+                    <div class="admin-card-icon">＋</div>
+                    <h3>Create New Event</h3>
+                    <p>
+                        Add campus events with dates, descriptions,
+                        and event categories.
+                    </p>
+                    <a href="/events/add" class="admin-card-link">
+                        Add Event →
+                    </a>
+                </article>
+
+                <article class="admin-card">
+                    <div class="admin-card-icon">⇩</div>
+                    <h3>Imported Events</h3>
+                    <p>
+                        Review events imported from the Indian
+                        calendar and approve or reject them.
+                    </p>
+                    <a href="{{ url_for('admin_approval.imported_events') }}" class="admin-card-link">
+                        Review Events →
+                    </a>
+                </article>
+
+
+                <article class="admin-card">
+                    <div class="admin-card-icon">♧</div>
+
+                    <h3>Notification Management</h3>
+
+                    <p>
+                        Monitor notification records, user IDs,
+                        reminder types, and notification history.
+                    </p>
+
+                    <a href="{{ url_for('admin_notification.notification_dashboard') }}" class="admin-card-link">
+                        View Notifications →
+                    </a>
+                </article>
+
+                
+
+
+                <article class="admin-card">
+                    <div class="admin-card-icon">◷</div>
+                    <h3>Deleted Event History</h3>
+                    <p>
+                        Review previously deleted campus events
+                        and access their history.
+                    </p>
+                    <a href="/events/history" class="admin-card-link">
+                        View History →
+                    </a>
+                </article>
+
+
+            </div>
+
+        </section>
+
+        <footer class="admin-dashboard-footer">
+            Daymark Campus Event Management System
+            <span> · Administrator Panel</span>
+        </footer>
+
+    </main>
+
+</div>
+
+{% endblock %}

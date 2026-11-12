@@ -1,7 +1,4 @@
-/* =========================================================
-   DAYMARK — Daily Events & Indian Calendar
-   A calm, human-centred interface
-========================================================= */
+
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
 
@@ -745,4 +742,24 @@ h1, .form-intro h1 {
         animation-duration: .01ms !important;
         animation-iteration-count: 1 !important;
     }
+}
+
+
+.admin-panel-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 17px;
+    background: #496e53;
+    color: #ffffff !important;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+}
+
+.admin-panel-link:hover {
+    background: #36563f;
+    transform: translateY(-2px);
 }

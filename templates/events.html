@@ -29,6 +29,7 @@
             <div class="event-card-footer">
                 <a class="small-link" href="{{ url_for('events.edit_event', event_id=event.id) }}">Edit details <span aria-hidden="true">↗</span></a>
                 <form method="POST" action="{{ url_for('events.delete_event', event_id=event.id) }}" onsubmit="return confirm('Move this event to deleted history?');">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="button-link button-delete" type="submit">Delete</button>
                 </form>
             </div>

@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}Imported Events | Daymark{% endblock %}
+
+{% block content %}
+
+<style>
+    .admin-events-page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 24px;
+        color: #26352d;
+    }
+
+    .admin-events-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 32px;
+    }
+
+    .admin-events-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 34px;
+        margin: 0 0 8px;
+    }
+
+    .admin-events-header p {
+        color: #77847b;
+        margin: 0;
+    }
+
+    .admin-back-link {
+        text-decoration: none;
+        color: #486b55;
+        font-weight: 600;
+    }
+
+    .admin-event-count {
+        background: #e9f0e9;
+        color: #486b55;
+        padding: 8px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .admin-event-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 22px;
+    }
+
+    .admin-event-card {
+        background: #fff;
+        border: 1px solid #e7ebe6;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 5px 20px rgba(30, 50, 35, 0.04);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .admin-event-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 28px rgba(30, 50, 35, 0.08);
+    }
+
+    .admin-event-category {
+        display: inline-block;
+        background: #edf3ed;
+        color: #54715a;
+        padding: 6px 11px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+
+    .admin-event-card h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        margin: 0 0 12px;
+    }
+
+    .admin-event-date,
+    .admin-event-region {
+        color: #718078;
+        font-size: 14px;
+        margin: 8px 0;
+    }
+
+    .admin-event-description {
+        color: #68766d;
+        font-size: 14px;
+        line-height: 1.7;
+        margin: 16px 0;
+    }
+
+    .admin-event-source {
+        font-size: 12px;
+        color: #89948c;
+        overflow-wrap: anywhere;
+        margin-bottom: 18px;
+    }
+
+    .admin-event-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .admin-event-actions form {
+        flex: 1;
+    }
+
+    .admin-event-actions button {
+        width: 100%;
+        border: none;
+        padding: 11px;
+        border-radius: 9px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: opacity 0.2s ease;
+    }
+
+    .admin-event-actions button:hover {
+        opacity: 0.85;
+    }
+
+    .approve-button {
+        background: #496e53;
+        color: white;
+    }
+
+    .reject-button {
+        background: #f8e9e6;
+        color: #a34437;
+    }
+
+    .admin-empty-state {
+        text-align: center;
+        padding: 65px 20px;
+        background: #f7f8f5;
+        border-radius: 16px;
+        border: 1px dashed #dce4da;
+    }
+
+    .admin-empty-state h2 {
+        font-family: 'Playfair Display', serif;
+        margin-bottom: 10px;
+    }
+
+    .admin-empty-state p {
+        color: #7b887e;
+    }
+
+    @media (max-width: 600px) {
+        .admin-events-page {
+            padding: 28px 16px;
+        }
+
+        .admin-events-header h1 {
+            font-size: 28px;
+        }
+
+        .admin-event-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="admin-events-page">
+
+    <div class="admin-events-header">
+        <div>
+            <h1>Imported Events</h1>
+            <p>Review and manage events imported from the Indian calendar.</p>
+        </div>
+
+        <a href="{{ url_for('admin_auth.admin_dashboard') }}" class="admin-back-link">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+    <div style="margin-bottom: 24px;">
+        <span class="admin-event-count">
+            {{ events|length }} Pending Events
+        </span>
+    </div>
+
+    {% if events %}
+
+    <div class="admin-event-list">
+
+        {% for event in events %}
+
+        <article class="admin-event-card">
+
+            <span class="admin-event-category">
+                {{ event[3] or "General" }}
+            </span>
+
+            <h2>{{ event[1] }}</h2>
+
+            <p class="admin-event-date">
+                <strong>Date:</strong>
+                {{ event[2].strftime('%d %B %Y') if event[2] else 'Not specified' }}
+            </p>
+
+            <p class="admin-event-region">
+                <strong>Region:</strong> {{ event[5] or "India" }}
+            </p>
+
+            {% if event[6] %}
+            <span class="admin-event-category">
+                Public Holiday
+            </span>
+            {% endif %}
+
+            <p class="admin-event-description">
+                {{ event[4] or "No description available." }}
+            </p>
+
+            <p class="admin-event-source">
+                <strong>Source:</strong> {{ event[7] or "Unknown" }}
+            </p>
+
+            {% if event[8] %}
+            <p class="admin-event-source">
+                <a href="{{ event[8] }}" target="_blank" rel="noopener noreferrer">
+                    View Original Source ↗
+                </a>
+            </p>
+            {% endif %}
+
+            <div class="admin-event-actions">
+
+                <form method="POST" action="{{ url_for('admin_approval.approve_event', event_id=event[0]) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="approve-button">
+                        Approve
+                    </button>
+
+                </form>
+
+                <form method="POST" action="{{ url_for('admin_approval.reject_event', event_id=event[0]) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="reject-button">
+                        Reject
+                    </button>
+
+                </form>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="admin-empty-state">
+        <h2>All Caught Up!</h2>
+        <p>There are currently no pending events to review.</p>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

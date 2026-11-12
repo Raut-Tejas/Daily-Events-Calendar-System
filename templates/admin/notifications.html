@@ -1,0 +1,257 @@
+
+{% extends "base.html" %}
+
+{% block title %}Notification Management | Daymark{% endblock %}
+
+{% block content %}
+
+<style>
+.notification-page {
+    max-width: 1250px;
+    margin: auto;
+    padding: 38px 24px;
+    color: #293b30;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.notification-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    margin: 0 0 8px;
+}
+
+.notification-header p {
+    color: #849087;
+    font-size: 14px;
+    margin: 0;
+}
+
+.notification-back {
+    color: #496e53;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.notification-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+    margin-bottom: 35px;
+}
+
+.notification-stat-card {
+    background: white;
+    border: 1px solid #e8ece6;
+    border-radius: 14px;
+    padding: 23px;
+}
+
+.notification-stat-card span {
+    color: #849087;
+    font-size: 13px;
+}
+
+.notification-stat-card h2 {
+    font-size: 30px;
+    margin: 12px 0 0;
+    color: #36563f;
+}
+
+.notification-table-wrapper {
+    background: white;
+    border: 1px solid #e8ece6;
+    border-radius: 14px;
+    overflow-x: auto;
+}
+
+.notification-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+}
+
+.notification-table th {
+    background: #f3f6f1;
+    color: #68766d;
+    font-size: 11px;
+    letter-spacing: 0.7px;
+    text-align: left;
+    padding: 17px;
+    white-space: nowrap;
+}
+
+.notification-table td {
+    padding: 17px;
+    border-top: 1px solid #edf0eb;
+    font-size: 13px;
+    color: #5f6d64;
+}
+
+.notification-table tr:hover td {
+    background: #fafbf9;
+}
+
+.notification-event-name {
+    color: #293b30;
+    font-weight: 600;
+}
+
+.notification-type {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #edf3ed;
+    color: #496e53;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.notification-empty {
+    text-align: center;
+    padding: 55px 20px;
+    color: #849087;
+}
+
+.notification-empty h3 {
+    color: #36563f;
+    font-family: 'Playfair Display', serif;
+}
+
+@media (max-width: 700px) {
+    .notification-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .notification-page {
+        padding: 25px 15px;
+    }
+}
+</style>
+
+<div class="notification-page">
+
+    <header class="notification-header">
+        <div>
+            <h1>Notification Management</h1>
+            <p>Monitor notification records and delivery history.</p>
+        </div>
+
+        <a href="{{ url_for('admin_auth.admin_dashboard') }}"
+           class="notification-back">
+            ← Back to Dashboard
+        </a>
+    </header>
+
+    <section class="notification-stats">
+
+        <div class="notification-stat-card">
+            <span>Total Notification Records</span>
+            <h2>{{ stats.total_notifications }}</h2>
+        </div>
+
+        <div class="notification-stat-card">
+            <span>Unique User IDs</span>
+            <h2>{{ stats.total_users }}</h2>
+        </div>
+
+        <div class="notification-stat-card">
+            <span>Notified Event Occurrences</span>
+            <h2>{{ stats.notified_occurrences }}</h2>
+        </div>
+
+    </section>
+
+    <section>
+
+        <div style="margin-bottom: 18px;">
+            <h2 style="font-family: 'Playfair Display', serif;">
+                Notification History
+            </h2>
+            <p style="color: #849087; font-size: 13px;">
+                Records retrieved from your PostgreSQL database.
+            </p>
+        </div>
+
+        <div class="notification-table-wrapper">
+
+            {% if notifications %}
+
+            <table class="notification-table">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>EVENT</th>
+                        <th>CATEGORY</th>
+                        <th>EVENT DATE</th>
+                        <th>USER ID</th>
+                        <th>REMINDER TYPE</th>
+                        <th>SENT AT</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in notifications %}
+
+                    <tr>
+                        <td>{{ item.id }}</td>
+
+                        <td class="notification-event-name">
+                            {{ item.event_name }}
+                        </td>
+
+                        <td>{{ item.category }}</td>
+
+                        <td>
+                            {{ item.event_date.strftime('%d %b %Y') }}
+                        </td>
+
+                        <td>{{ item.user_id }}</td>
+
+                        <td>
+                            <span class="notification-type">
+                                {{ item.reminder_type }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {{ item.sent_at.strftime('%d %b %Y, %I:%M %p') if item.sent_at else 'N/A' }}
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="notification-empty">
+                <h3>No Notification Records Yet</h3>
+                <p>
+                    Notification records will appear here
+                    when your notification service logs them.
+                </p>
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}
+
