@@ -23,7 +23,7 @@ login_manager.login_view = "admin_auth.admin_login"
 login_manager.login_message = "Please log in to access this page."
 login_manager.login_message_category = "warning"
 
-from database.models import Event, DeletedEvent, Admin
+from database.models import Event, DeletedEvent, Admin, Student, Notification
 
 
 @login_manager.user_loader
